@@ -1,6 +1,9 @@
 name: build
 
 on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  "0 0 * * *"
   push:
     branches: main
 
@@ -26,7 +29,9 @@ jobs:
           context: https://github.com/simulationcraft/simc.git#shadowlands
           tags: davidczech/simc:latest
           pull: true
-          # build-args:
+          build-args: |
+            THREADS=4
+            APIKEY=${{ secrets.BATTLNET_API_TOKEN }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
